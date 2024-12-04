@@ -23,5 +23,19 @@ contract FundMeTest is Test {
         assertEq(fundMe.i_owner(), address(this));
     }
 
+    // What can we do to work with addresses outside our system?
+    // 1. Unit Testing
+    //  -Testing a specific part of our code in isolation
+    // 2. Integration Testing
+    //  -Testing how our code work with other parts of our code
+    // 3. Forking
+    //  -Testing our code in a simulated real environment
+    // 4. Staging
+    //  -Testing out code in a real enviroment that is not prod
+
+    function testPriceFeedVersionIsAccurate() public view {
+        uint256 version = fundMe.getVersion();
+        assertEq(version, 4);
+    }
 
 }
