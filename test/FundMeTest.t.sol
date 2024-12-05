@@ -6,6 +6,8 @@ import {Test, console} from "forge-std/Test.sol";
 import {FundMe} from "../src/FundMe.sol";
 import {DeployFundMe} from "../script/DeployFundMe.s.sol";
 
+// forge coverage --rpc-url to review the test coverage
+
 contract FundMeTest is Test {
     FundMe fundMe;
 
@@ -24,17 +26,6 @@ contract FundMeTest is Test {
         console.log(msg.sender);
         assertEq(fundMe.i_owner(), address(this));
     }
-
-    // What can we do to work with addresses outside our system?
-    // 1. Unit Testing
-    //  -Testing a specific part of our code in isolation
-    // 2. Integration Testing
-    //  -Testing how our code work with other parts of our code
-    // 3. Forking
-    //  -Testing our code in a simulated real environment
-    // 4. Staging
-    //  -Testing out code in a real enviroment that is not prod
-    // forge coverage --rpc-url to review the test coverage
 
     function testPriceFeedVersionIsAccurate() public view {
         uint256 version = fundMe.getVersion();
