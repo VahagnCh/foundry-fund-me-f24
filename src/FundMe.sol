@@ -15,22 +15,23 @@ contract FundMe {
 
     using PriceConverter for uint256;
 
-    uint256 public constant MINIMUN_USD = 5e18;
-
     address[] public funders;
     mapping(address funder => uint256 amountFunded) public addressToAmountFunded; 
 
+    uint256 public constant MINIMUN_USD = 5e18;
     address public immutable i_owner;
+    AggregatorV3Interface private s_priceFeed;
 
-    constructor() {
+    constructor(address priceFeed) {
        i_owner = msg.sender;
+       s_priceFeed = AggregatorV3Interface(priceFeed);
     }
 
     function fund() public payable {
 
         // Allow users to send money
         // Have a minimun money sent $5 USD
-        require(msg.value.getConversionRate() >= MINIMUN_USD, "Didn't send enough ETH" ); // 1e18 = 1ETH = 1000000000000000000 = 1 * 10 ** 18
+        require(msg.value.getConversionRate(s_priceFeed) >= MINIMUN_USD, "Didn't send enough ETH" ); // 1e18 = 1ETH = 1000000000000000000 = 1 * 10 ** 18
         funders.push(msg.sender);
         addressToAmountFunded[msg.sender] = addressToAmountFunded[msg.sender] + msg.value;
         //What is a revert?
@@ -57,8 +58,7 @@ contract FundMe {
     }
 
     function getVersion() public view returns (uint256) {
-        AggregatorV3Interface priceFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
-        return priceFeed.version();
+        return s_priceFeed.version();
     }
 
     // Executes the modifier first where we addit 

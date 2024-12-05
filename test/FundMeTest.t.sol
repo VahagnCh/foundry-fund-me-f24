@@ -4,13 +4,15 @@ pragma solidity ^0.8.24;
 
 import {Test, console} from "forge-std/Test.sol";
 import {FundMe} from "../src/FundMe.sol";
+import {DeployFundMe} from "../script/DeployFundMe.s.sol";
 
 contract FundMeTest is Test {
     FundMe fundMe;
 
     function setUp() external {
         // us -> FundeMeTest -> FundMe
-        fundMe = new FundMe();
+        DeployFundMe deployFundMe = new DeployFundMe();
+        fundMe = deployFundMe.run();
     }
 
     function testMinimumDollarIsFive() public view {
@@ -32,6 +34,7 @@ contract FundMeTest is Test {
     //  -Testing our code in a simulated real environment
     // 4. Staging
     //  -Testing out code in a real enviroment that is not prod
+    // forge coverage --rpc-url to review the test coverage
 
     function testPriceFeedVersionIsAccurate() public view {
         uint256 version = fundMe.getVersion();
