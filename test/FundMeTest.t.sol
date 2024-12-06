@@ -27,7 +27,6 @@ contract FundMeTest is Test {
         assertEq(fundMe.i_owner(), msg.sender);
     }
 
-
     function testPriceFeedIsAccurate() public view {
         if (block.chainid == 11155111) {
             uint256 version = fundMe.getVersion();
