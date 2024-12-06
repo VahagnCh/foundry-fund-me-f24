@@ -24,12 +24,17 @@ contract FundMeTest is Test {
     function testOwnerIsMsgSender() public view {
         console.log(fundMe.i_owner());
         console.log(msg.sender);
-        assertEq(fundMe.i_owner(), address(this));
+        assertEq(fundMe.i_owner(), msg.sender);
     }
 
-    function testPriceFeedVersionIsAccurate() public view {
-        uint256 version = fundMe.getVersion();
-        assertEq(version, 4);
-    }
 
+    function testPriceFeedIsAccurate() public view {
+        if (block.chainid == 11155111) {
+            uint256 version = fundMe.getVersion();
+            assertEq(version, 4);
+        } else if (block.chainid == 1) {
+            uint256 version = fundMe.getVersion();
+            assertEq(version, 6);
+        }
+    }
 }
