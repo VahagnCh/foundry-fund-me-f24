@@ -15,6 +15,7 @@ contract FundMe {
 
     using PriceConverter for uint256;
 
+    // State variables
     address[] private s_funders;
     mapping(address funder => uint256 amountFunded) private s_addressToAmountFunded; 
 
@@ -37,6 +38,17 @@ contract FundMe {
         //What is a revert?
         // Undo any action that have been done, and send the remaining gas back
     }
+
+    function cheaperWithdraw() public onlyOwner {
+        uint256 fundersLength = s_funders.length;
+        for(uint256 funderIndex = 0; funderIndex < fundersLength; funderIndex++){
+            address funder = s_funders[funderIndex];
+            s_addressToAmountFunded[funder] = 0;
+        }
+        s_funders = new address[](0);
+        (bool callSuccess,) = payable(msg.sender).call{value: address(this).balance}("");
+        require(callSuccess, "Call Failed");
+    } 
 
     function withdraw() public onlyOwner {
         for(uint256 funderIndex = 0; funderIndex < s_funders.length; funderIndex ++) {
